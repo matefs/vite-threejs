@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+
 
 // Cria uma cena
 const scene = new THREE.Scene();
@@ -7,14 +10,20 @@ const scene = new THREE.Scene();
 // Cria uma câmera
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.position.z = 1;
- 
-const ambientLight = new THREE.AmbientLight( 0xffffff, 0.5 );
-scene.add( ambientLight );
 
 // Cria um objeto WebGLRenderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+
+
+const controls = new OrbitControls( camera, renderer.domElement );
+
+//controls.update() must be called after any manual changes to the camera's transform
+controls.update();
+
+const ambientLight = new THREE.AmbientLight( 0xffffff, 0.5 );
+scene.add( ambientLight );
 
 // Carrega o modelo GLTF
 const loader = new GLTFLoader();
@@ -40,7 +49,9 @@ loader.load(
 
 // Renderiza a cena
 function animate() {
-    requestAnimationFrame( animate );
-    renderer.render( scene, camera );
+  
+  requestAnimationFrame( animate );
+  controls.update();
+  renderer.render( scene, camera );
 }
 animate();
